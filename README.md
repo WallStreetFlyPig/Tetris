@@ -4,7 +4,7 @@
 
 ## 启动
 
-**最简单：解压后，用 Edge、Chrome 或 Firefox 打开 `index.html`，点击「开始游戏」。** 不要在压缩包里直接打开，请先解压整个文件夹。页面中的 CSS、JS 和 SVG 文件需要留在原来的相对位置。
+**最简单：下载后，用 Edge、Chrome 或 Firefox 打开 `index.html`，点击「开始游戏」。** 
 
 可选：如果电脑已安装 Node.js，在本文件所在目录打开终端并运行：
 
@@ -52,19 +52,6 @@ node serve.cjs
 连续有消行的方块，从第二个开始增加连击分：`50 × 连击索引 × 当前等级`，第二次索引为 1。无消行的方块会清除连击。
 
 上次消行和本次消行都是四行时，本次额外获得 50% 的基础分。中间可以有不消行的方块；消除 1～3 行会中断这项奖励。软降与硬降分数不乘等级。本版本不设置 T-spin、全清或特殊旋转的额外计分。
-
-## 上传 GitHub Pages
-
-1. 新建一个 GitHub 仓库，将 **此文件夹内的内容** 上传到仓库根目录。确保根目录直接能看到 `index.html`，而不是外面还套一层 `tetris/`。不要只上传 ZIP 文件。
-2. 至少上传 `index.html`、`styles.css`、`engine.js`、`game.js`、`favicon.svg` 和 `.nojekyll`；也可以上传整个项目。
-3. 打开仓库的 **Settings → Pages**。
-4. 在 **Build and deployment → Source** 选择 **Deploy from a branch**。
-5. 选择实际上传文件的分支（通常为 `main`）及 **/(root)**，点击 **Save**。
-6. 等待仓库的 Pages 部署任务完成，再打开 Pages 设置页给出的链接。项目地址通常为 `https://你的用户名.github.io/仓库名/`。
-
-本项目使用相对路径，放在 GitHub Pages 的仓库子路径下也可以运行，无需修改代码或添加构建流程。若出现 404，先检查根目录中的 `index.html`、分支和文件夹选择，再查看仓库 Actions 中的部署结果。
-
-发布设置参考：[GitHub 官方说明](https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site)。本次交付为本地文件，未代替你上传仓库或开启线上站点。
 
 ## 文件作用
 
