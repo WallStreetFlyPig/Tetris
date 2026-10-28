@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#101119">
+  <meta name="description" content="方块之间：一款可以离线畅玩的桌面俄罗斯方块游戏。七种方块、暂存、落点投影与经典消行挑战。">
+  <title>方块之间 · BLOCKFALL</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script src="engine.js" defer></script>
+  <script src="game.js" defer></script>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="方块之间 首页">
+        <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
+        <span>方块之间<span class="brand-en">BLOCKFALL</span></span>
+      </a>
+      <div class="header-actions">
+        <span class="local-badge"><span></span> 离线也能玩</span>
+        <button id="sound-button" class="icon-button" type="button" aria-label="开启音效" aria-pressed="false" title="音效（M）">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M11 5 6 9H3v6h3l5 4Z"/><path id="sound-waves" d="m16 9 5 6m0-6-5 6"/></svg>
+        </button>
+        <button id="help-button" class="icon-button" type="button" aria-label="查看玩法与计分规则" title="玩法与计分规则（?）">?</button>
+      </div>
+    </header>
+
+    <main>
+      <section class="intro" aria-labelledby="page-title">
+        <div><p class="eyebrow"><span></span> CLASSIC, AT YOUR PACE</p><h1 id="page-title">让每一块，都恰到好处<span>。</span></h1></div>
+        <p class="intro-note">落下，旋转，找到刚好的位置。<br>把今天的杂念，一行行消除。</p>
+      </section>
+
+      <div class="game-layout">
+        <aside class="left-rail" aria-label="暂存与操作">
+          <section class="panel hold-panel">
+            <div class="panel-heading"><h2>暂存方块</h2><kbd>C</kbd></div>
+            <div class="hold-area"><canvas id="hold-canvas" width="180" height="100" role="img" aria-label="暂无暂存方块"></canvas><span id="hold-placeholder">留一手，给下一步</span></div>
+            <p id="hold-hint" class="panel-note">每个方块可交换一次</p>
+          </section>
+          <section class="controls-panel">
+            <p class="section-label">指尖指南 <span>CONTROLS</span></p>
+            <dl class="controls-list">
+              <div><dt>左右移动</dt><dd><kbd>←</kbd><kbd>→</kbd></dd></div>
+              <div><dt>顺时针旋转</dt><dd><kbd>↑</kbd><span>/</span><kbd>X</kbd></dd></div>
+              <div><dt>逆时针旋转</dt><dd><kbd>Z</kbd></dd></div>
+              <div><dt>加速下落</dt><dd><kbd>↓</kbd></dd></div>
+              <div><dt>直接落底</dt><dd><kbd class="wide-key">SPACE</kbd></dd></div>
+              <div><dt>暂存 / 交换</dt><dd><kbd>C</kbd></dd></div>
+              <div><dt>暂停 / 继续</dt><dd><kbd>P</kbd><span>/</span><kbd>ESC</kbd></dd></div>
+            </dl>
+            <div class="tip"><span aria-hidden="true">✦</span><p>细线方块是落点投影，<br>按空格即可落在这里。</p></div>
+          </section>
+        </aside>
+
+        <section class="board-column" aria-label="俄罗斯方块游戏">
+          <div class="board-meta"><span><i id="status-dot"></i><span id="status-label">准备就绪</span></span><span>10 × 20</span></div>
+          <div class="board-frame" id="board-frame">
+            <canvas id="board" width="600" height="1200" tabindex="0" role="img" aria-label="俄罗斯方块棋盘，10列20行。操作方式见左侧指尖指南。"></canvas>
+            <div id="board-fx" class="board-fx" aria-hidden="true"></div>
+            <div class="board-overlay" id="game-overlay">
+              <div class="overlay-card">
+                <div class="overlay-symbol" id="overlay-symbol" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+                <p class="eyebrow" id="overlay-eyebrow">A LITTLE SPACE TO PLAY</p>
+                <h2 id="overlay-title">下一块，刚刚好。</h2>
+                <p id="overlay-description">从第一块开始，<br>创造属于你的消行节奏。</p>
+                <button id="primary-button" type="button" class="primary-button"><span id="primary-label">开始游戏</span><span aria-hidden="true">↗</span></button>
+                <span class="overlay-shortcut" id="overlay-shortcut">或按 ENTER 开始</span>
+              </div>
+            </div>
+            <div class="play-announcement" id="play-announcement" aria-hidden="true"></div>
+          </div>
+          <div class="board-toolbar"><button id="pause-button" type="button" disabled><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M5 3v10M11 3v10"/></svg><span id="pause-label">暂停</span><kbd>P</kbd></button><button id="restart-button" type="button"><svg viewBox="0 0 16 16" aria-hidden="true"><path d="M3 6a5 5 0 1 1 0 4M3 2v4h4"/></svg>重新开始</button></div>
+        </section>
+
+        <aside class="right-rail" aria-label="分数与下一个方块">
+          <section class="panel score-panel">
+            <div class="panel-heading"><h2>当前分数</h2><span class="tiny-label">SCORE</span></div>
+            <p id="score" class="score-value">000000</p>
+            <div class="best-row"><span><svg viewBox="0 0 16 16" aria-hidden="true"><path d="m8 2 1.8 3.7 4.1.6-3 2.9.7 4.1L8 11.4l-3.6 1.9.7-4.1-3-2.9 4.1-.6Z"/></svg> 个人最佳</span><span id="best-score">0</span></div>
+          </section>
+          <section class="panel progress-panel">
+            <div class="level-line"><div><span class="small-label">等级 <span>LEVEL</span></span><p id="level">01</p></div><div class="lines-stat"><span class="small-label">消行 <span>LINES</span></span><p id="lines">0</p></div></div>
+            <div class="progress-track" role="progressbar" aria-label="距离下一级的消行进度" aria-valuemin="0" aria-valuemax="10" aria-valuenow="0" id="level-progress"><div id="level-fill"></div></div>
+            <p class="panel-note">再消除 <strong id="lines-to-level">10</strong> 行，进入下一级</p>
+          </section>
+          <section class="panel next-panel">
+            <div class="panel-heading"><h2>接下来</h2><span class="tiny-label">NEXT</span></div>
+            <div class="next-list"><div class="next-first"><span>01</span><canvas id="next-0" width="180" height="90" role="img" aria-label="下一个方块"></canvas></div><div><span>02</span><canvas id="next-1" width="180" height="70" role="img" aria-label="第二个方块"></canvas></div><div><span>03</span><canvas id="next-2" width="180" height="70" role="img" aria-label="第三个方块"></canvas></div></div>
+          </section>
+          <div class="rhythm-note"><span></span><p>不必着急，<br><strong>总有一块适合这里。</strong></p></div>
+        </aside>
+      </div>
+    </main>
+    <footer><span>七种形状，无限可能。</span><span>MADE FOR A LITTLE BREAK <i>✦</i></span></footer>
+  </div>
+  <div id="live-status" class="sr-only" role="status" aria-live="polite" aria-atomic="true"></div>
+  <dialog id="help-dialog" aria-labelledby="help-title">
+    <div class="dialog-heading"><p class="eyebrow">HOW TO PLAY</p><button type="button" id="close-help" class="icon-button" aria-label="关闭玩法说明">×</button></div>
+    <h2 id="help-title">给方块，找个好位置。</h2>
+    <p>移动、旋转下落的方块。填满一整行即可消除；堆到顶部、无法放入新方块时，游戏结束。</p>
+    <div class="scoring-grid"><div><span>消除 1 行</span><strong>100</strong></div><div><span>消除 2 行</span><strong>300</strong></div><div><span>消除 3 行</span><strong>500</strong></div><div><span>消除 4 行</span><strong>800</strong></div></div>
+    <p class="help-small">消行基础分 × 当前等级。软降每格 +1，空格硬降每格 +2。连续有消行的方块获得连击奖励；连续四行消除可获得 50% 基础分加成。每消除 10 行升一级，下落更快。</p>
+    <ul><li><kbd>C</kbd> 暂存或交换方块，每个方块限一次。</li><li><kbd>↑</kbd> / <kbd>X</kbd> 顺时针；<kbd>Z</kbd> 逆时针旋转。</li><li><kbd>P</kbd> / <kbd>ESC</kbd> 暂停；<kbd>M</kbd> 开关音效。</li><li>离开页面或切换窗口时自动暂停。</li></ul>
+    <p class="help-small">最高分和音效偏好仅保存在当前浏览器中。游戏不需要联网；浏览器清理数据后记录会被清除。本游戏未设置 T-spin 特殊计分。</p>
+    <button type="button" id="help-done" class="primary-button">知道了，继续挑战 <span aria-hidden="true">↗</span></button>
+  </dialog>
+  <noscript>请启用浏览器 JavaScript 后刷新，即可开始游戏。</noscript>
+</body>
+</html>
